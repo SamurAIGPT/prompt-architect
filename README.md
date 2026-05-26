@@ -41,7 +41,7 @@ Deploying an instance of AI Prompt Architect to the web requires minimal configu
 
 ### One-Click Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SamurAIGPT/prompt-architect&root-directory=apps/prompt-architect)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SamurAIGPT/prompt-architect)
 
 > **Pro Tip:** Fork this repository, replace `YOUR_GITHUB_USER` in the link above, to streamline deployments for your private forks.
 
