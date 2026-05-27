@@ -1,6 +1,9 @@
-# 🚀 AI Prompt Architect — Premium Conversational Prompt Workspace
+# 🏗️ Prompt Architect — Open-Source AI Prompt Engineering & Optimization SaaS (Free PromptBase / PromptPerfect Alternative)
 
-> **An elite, glassmorphic conversational prompt engineering platform.** Built with Next.js (App Router), this application serves as a complete SaaS workspace for iterative prompt optimization, constraint modeling, and direct deployment intents.
+> **Engineer, refine, and save professional AI prompts for ChatGPT, Claude, Midjourney, and Stable Diffusion in seconds.** A production-ready, self-hostable Next.js SaaS boilerplate with conversational refinement threads, a saved prompt library, multi-engine targeting, and built-in Stripe billing. A free open-source alternative to PromptBase, PromptPerfect, PromptHero, and FlowGPT — powered by the MuAPI AI engine.
+
+**Tech stack:** Next.js 14 (App Router) · Prisma · PostgreSQL · NextAuth (Google OAuth) · Stripe · Tailwind CSS · MuAPI any-llm
+**Use cases:** AI developers · Prompt engineers · ChatGPT power users · Content creators · Midjourney artists · LLM workflow builders · AI product teams · Technical writers
 
 ## 🌐 Try the Live Workspace
 
