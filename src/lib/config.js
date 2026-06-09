@@ -31,6 +31,7 @@ const ANY_LLM_MODELS = [
 ];
 
 const config = {
+  appName: "Prompt Architect",
   auth: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID,

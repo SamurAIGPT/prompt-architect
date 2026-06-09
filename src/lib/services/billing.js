@@ -14,8 +14,8 @@ export const BillingService = {
           price_data: {
             currency: "usd",
             product_data: {
-              name: `AI Prompt Architect — ${plan.name}`,
-              description: plan.description,
+              name: `${config.stripe.plans[planId].name}`,
+              description: `Purchase ${plan.credits} credits to perform AI generations.`,
             },
             unit_amount: plan.price,
           },
@@ -32,12 +32,7 @@ export const BillingService = {
   },
 
   async handleWebhook(body, signature) {
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      config.stripe.webhookSecret
-    );
-
+    const event = stripe.webhooks.constructEvent(body, signature, config.stripe.webhookSecret);
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const userId = session.metadata.userId;
@@ -48,7 +43,6 @@ export const BillingService = {
         return { success: true, userId, credits };
       }
     }
-
     return { success: false };
-  },
+  }
 };

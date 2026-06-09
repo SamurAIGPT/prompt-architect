@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "./providers";
+import { Providers } from "./providers";
+import config from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,14 +19,18 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const theme = config?.theme || "slate-indigo";
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme={theme}
     >
-      <body className="min-h-full flex flex-col">
-        <SessionProvider>{children}</SessionProvider>
+      <body className="min-h-full flex flex-col bg-bg-page text-primary-text">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
 }
+

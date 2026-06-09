@@ -1,84 +1,121 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import PricingSection from "@/components/PricingSection";
-import FooterSection from "@/components/FooterSection";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import confetti from "canvas-confetti";
+import Footer from "@/components/Footer";
+import { FaCheck, FaInfoCircle } from "react-icons/fa";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
-function PricingPageContent() {
-  const searchParams = useSearchParams();
-  const success = searchParams.get("success");
-  const canceled = searchParams.get("canceled");
-  const [notification, setNotification] = useState(null);
+const PLANS = [
+  { id: "basic", name: "Basic Pack", price: "$5", credits: 100, description: "Perfect for testing custom prompts and exploring styles." },
+  { id: "standard", name: "Standard Pack", price: "$10", credits: 250, description: "Ideal for regular creators wanting high resolution outputs." },
+  { id: "pro", name: "Professional Pack", price: "$20", credits: 600, description: "Designed for power users demanding batch exports and high speed.", popular: true },
+  { id: "business", name: "Business Pack", price: "$50", credits: 2000, description: "Maximum value pack for agency workflows and large volume generations." }
+];
 
-  useEffect(() => {
-    if (success === "true") {
-      setNotification({
-        type: "success",
-        message: "Payment successful! Your credits have been credited to your account. Let's build some elite prompts!",
-      });
+export default function Pricing() {
+  const { data: session, status } = useSession();
+  const [loadingPlan, setLoadingPlan] = useState(null);
 
-      // Trigger celebratory confetti
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 },
-      });
-    } else if (canceled === "true") {
-      setNotification({
-        type: "canceled",
-        message: "Payment checkout was canceled. If you need any help, please contact our support team.",
-      });
+  const handleCheckout = async (planId) => {
+    if (status !== "authenticated") {
+      toast.error("You must sign in with Google to purchase credit packages.");
+      return;
     }
-  }, [success, canceled]);
+
+    setLoadingPlan(planId);
+    try {
+      const { data } = await axios.post("/api/checkout", { planId });
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No redirection URL returned");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.error || "Failed to trigger Stripe checkout session.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#09090b] text-zinc-100 font-sans">
+    <div className="flex min-h-dvh flex-col bg-bg-page select-none text-primary-text overflow-hidden">
+      <Toaster position="top-right" />
       <Navbar />
 
-      <main className="flex-1 z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {notification && (
-          <div className="max-w-3xl mx-auto mb-10">
-            {notification.type === "success" ? (
-              <div className="p-5 rounded-2xl bg-emerald-600/10 border border-emerald-500/35 text-emerald-300 flex items-start gap-4">
-                <FaCheckCircle className="w-6 h-6 shrink-0 mt-0.5 text-emerald-400" />
-                <div>
-                  <h4 className="font-bold text-white mb-1">Thank you for your purchase!</h4>
-                  <p className="text-sm">{notification.message}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="p-5 rounded-2xl bg-red-600/10 border border-red-500/35 text-red-300 flex items-start gap-4">
-                <FaTimesCircle className="w-6 h-6 shrink-0 mt-0.5 text-red-400" />
-                <div>
-                  <h4 className="font-bold text-white mb-1">Checkout Canceled</h4>
-                  <p className="text-sm">{notification.message}</p>
-                </div>
-              </div>
-            )}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-12 sm:px-6 lg:px-8 flex flex-col gap-10 overflow-y-auto scrollbar-subtle items-center">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full mb-1">
+            <FaInfoCircle className="text-primary text-xs" />
+            <span className="text-[10px] font-black text-primary uppercase tracking-widest">Pricing Plans</span>
           </div>
-        )}
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight uppercase">Buy Credits Packs</h1>
+          <p className="text-xs sm:text-sm text-secondary-text max-w-lg leading-relaxed">
+            Purchase flexible credit packages to perform high-resolution predictions. Keep all profits — we handle AI infrastructure.
+          </p>
+        </div>
 
-        <PricingSection />
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl">
+          {PLANS.map((plan) => (
+            <div
+              key={plan.id}
+              className={`relative bg-bg-card border rounded-lg p-6 flex flex-col justify-between gap-6 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
+                plan.popular ? "border-primary shadow-xl shadow-primary/5 scale-105" : "border-divider/50 shadow-md"
+              }`}
+            >
+              {plan.popular && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow">
+                  Most Popular
+                </span>
+              )}
+
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-extrabold uppercase tracking-wide text-primary-text">{plan.name}</h3>
+                  <p className="text-2xl font-black tracking-tight text-white">{plan.price}</p>
+                </div>
+                
+                <div className="text-xs bg-bg-page/50 border border-divider/30 p-3 rounded text-center font-extrabold text-primary">
+                  {plan.credits} Art Credits
+                </div>
+
+                <p className="text-xs text-secondary-text leading-relaxed font-medium min-h-[3rem]">{plan.description}</p>
+                
+                <ul className="space-y-2 border-t border-divider/30 pt-4 text-xs font-semibold text-secondary-text">
+                  <li className="flex items-center gap-2">
+                    <FaCheck className="text-primary text-[10px]" />
+                    <span>Dynamic aspect ratios</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaCheck className="text-primary text-[10px]" />
+                    <span>HD image downloads</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaCheck className="text-primary text-[10px]" />
+                    <span>No subscription required</span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => handleCheckout(plan.id)}
+                disabled={loadingPlan !== null}
+                className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer select-none active:scale-[0.98] ${
+                  plan.popular ? "bg-primary text-white hover:bg-primary-hover shadow-primary/15" : "bg-bg-page hover:bg-bg-card text-primary-text border border-divider"
+                }`}
+              >
+                {loadingPlan === plan.id ? "Loading checkout..." : "Purchase Credits"}
+              </button>
+            </div>
+          ))}
+        </div>
       </main>
 
-      <FooterSection />
+      <Footer />
     </div>
-  );
-}
-
-export default function PricingPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#09090b] flex flex-col items-center justify-center text-zinc-300">
-        <div className="w-10 h-10 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm font-semibold tracking-wide text-zinc-400">Loading pricing...</p>
-      </div>
-    }>
-      <PricingPageContent />
-    </Suspense>
   );
 }
