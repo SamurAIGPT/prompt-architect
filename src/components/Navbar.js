@@ -15,8 +15,6 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  if (pathname === "/chat") return null;
-
   const appName = config?.appName || "AI SaaS";
   const logoLetter = appName.trim().charAt(0).toUpperCase();
 
@@ -24,6 +22,8 @@ export default function Navbar() {
   useEffect(() => {
     // Prefetch common routes
   }, []);
+
+  if (pathname === "/chat") return null;
 
   const appMatch = pathname ? pathname.match(/^\/app\/([^\/]+)/) : null;
   const currentAppId = appMatch ? appMatch[1] : null;
