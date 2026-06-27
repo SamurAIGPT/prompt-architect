@@ -15,6 +15,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+  if (pathname === "/chat") return null;
+
   const appName = config?.appName || "AI SaaS";
   const logoLetter = appName.trim().charAt(0).toUpperCase();
 

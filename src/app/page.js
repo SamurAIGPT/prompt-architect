@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import FeaturesSection from "@/components/FeaturesSection";
 import PricingSection from "@/components/PricingSection";
 import FooterSection from "@/components/FooterSection";
@@ -103,7 +102,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#09090b] text-zinc-100 font-sans selection:bg-violet-600/30 selection:text-white">
-      <Navbar />
 
       <main className="flex-1 z-10 flex flex-col items-center">
         {/* Hero Section */}

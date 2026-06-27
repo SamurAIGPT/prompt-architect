@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import config from "@/lib/config";
+import Navbar from "../components/Navbar";
 
 const font = Inter({
   variable: "--font-inter",
@@ -23,7 +24,10 @@ export default function RootLayout({ children }) {
       data-theme={theme}
     >
       <body className="min-h-full flex flex-col bg-bg-page text-primary-text font-sans">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );

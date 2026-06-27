@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
-import Link from "next/link";
-import Navbar from "@/components/Navbar";
 import FooterSection from "@/components/FooterSection";
 import {
   FaRegClipboard,
@@ -14,6 +12,7 @@ import {
   FaChevronRight,
   FaSearch,
 } from "react-icons/fa";
+import Link from "next/link";
 
 export default function GalleryPage() {
   const { data: session, status: sessionStatus } = useSession();
@@ -87,17 +86,16 @@ export default function GalleryPage() {
     return (
       <div className="min-h-screen bg-[#09090b] flex flex-col items-center justify-center text-zinc-300">
         <div className="w-10 h-10 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm font-semibold tracking-wide text-zinc-400">Loading library...</p>
+        <p className="text-sm font-semibold tracking-wide text-zinc-400">
+          Loading library...
+        </p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#09090b] text-zinc-100 font-sans">
-      <Navbar />
-
       <main className="flex-1 z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12 border-b border-white/5 pb-8">
           <div>
@@ -105,7 +103,8 @@ export default function GalleryPage() {
               Your Prompt Library
             </h1>
             <p className="text-zinc-400 text-sm md:text-base">
-              All your optimized instructions. Copy, refine, or deploy them directly to ChatGPT.
+              All your optimized instructions. Copy, refine, or deploy them
+              directly to ChatGPT.
             </p>
           </div>
 
@@ -135,7 +134,9 @@ export default function GalleryPage() {
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-pink-500 flex items-center justify-center mb-6">
               <FaMagic className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No Prompts Found</h3>
+            <h3 className="text-xl font-bold text-white mb-2">
+              No Prompts Found
+            </h3>
             <p className="text-zinc-400 text-sm max-w-md mx-auto mb-8">
               {searchQuery
                 ? "No prompts match your current search query. Try adjusting your keywords."
@@ -153,11 +154,14 @@ export default function GalleryPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {filteredPrompts.map((p) => {
               const text = getPromptText(p.content);
-              const formattedDate = new Date(p.createdAt).toLocaleDateString(undefined, {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              });
+              const formattedDate = new Date(p.createdAt).toLocaleDateString(
+                undefined,
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                },
+              );
 
               return (
                 <div
